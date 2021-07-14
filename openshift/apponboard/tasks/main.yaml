@@ -1,0 +1,22 @@
+---
+- hosts: localhost
+  vars:
+    openshift_host: "https://api.cluster-j9hbw.j9hbw.sandbox741.opentlc.com:6443"
+    k8s_admin_password: "r3dh4t1!"
+    app: "demo-app"
+  tasks:
+  - name: Log in obtain access token
+    kubernetes.core.k8s_auth:
+      host:  "{{ openshift_host }}"
+      username:  admin
+      password: "{{ k8s_admin_password }}"
+      validate_certs: false
+    register: k8s_auth_results
+  - name: Create a k8s namespace
+    kubernetes.core.k8s:
+      name: "{{ app }}-qa"
+      api_version: v1
+      #kubeconfig: .kube/config
+      api_key: "{{ k8s_auth_results.k8s_auth.api_key }}"
+      kind: Namespace
+      state: present
