@@ -1,29 +1,25 @@
 - hosts: localhost
   vars:
     ansible_python_interpreter: /usr/bin/python3
-    auth_token: "eyJhbGciOiJSUzI1NiIsImtpZCI6IjFJS2xYN3dNN3lwYkRfWUpDZ3pxa1djNElPMlpIVFIwUDlsckUyUEF4UVUifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJhbnNpYmxlLWRlbW8iLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlY3JldC5uYW1lIjoiYW5zaWJsZS1kZW1vLXRva2VuLXAyYjZ2Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFuc2libGUtZGVtbyIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjljMjY5MDcyLTY1MzUtNDcwMi1iNWUwLTY3Y2U3NDUwNTg0ZSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDphbnNpYmxlLWRlbW86YW5zaWJsZS1kZW1vIn0.yf5S6oicky0arJ6ee5y70VFPgfRU2NOKwf35m7WCkj3yQOeqho-oI9xdM3xmbwh582dn6ljatW8jIFEt_V1ktcM7X3Wm2--03gsQRcHAkcUcNAC4wqSFSIaY4hojy9lYNtFssQcV5sbdvb2H1XmprVkPrMDIW8MjwHEeGlIOakJFrACHZbaUaK0NZkgrEzMFoPDbEBWIeprUOp-OKJmSBX7GbsYaRVvN7AWf9pVC1iAT07SWDMbay1NjQlcGZCvDbVWy3HXOnecZvd0A0a31BhLm88gceWXYTg7TAQSr76WSJH7e5FRxF3yA_sS7Br2rhOuedhR9FDOpVZY95eKOIw"
-    ocp_host: https://api.cluster-j9hbw.j9hbw.sandbox741.opentlc.com:6443
+    auth_token: "{{ lookup('env', 'auth_token') }}"
+    ocp_host: "{{ lookup('env', 'OCP_HOST') }}"
   collections:
     - kubernetes.core
       openshift
   tasks:
-# - name: Try to login to OCP cluster
-    #kubernetes.core.k8s_auth:
-#   k8s_auth:
-#     host: "{{ ocp_host }}"
-#     username: $username
-#     password: $password
-     #api_key: "{{ auth_token }}"
-#     validate_certs: no
-#   register: k8s_auth_result
-  - name: deploy hello-world pod
+  - name: Create namespace
+    k8s:
+      name: ansible-demo
+      api_version: v1
+      kind: Namespace
+      state: present
+  - name: Deploy hello-world pod
     #kubernetes.core.k8s:
     k8s:
       state: present
       apply: yes
       namespace: ansible-demo
       host: "{{ ocp_host }}"
-     #api_key: "{{ k8s_auth_result.k8s_auth.api_key }}"
       api_key: "{{ auth_token }}"
       validate_certs: no
       definition:
