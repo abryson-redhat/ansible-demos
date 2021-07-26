@@ -1,0 +1,9 @@
+app: danny
+developers: minotaurs
+leads: leaders 
+viewers: just-see   
+namespaces: 
+  - env: dev
+    size: small
+  - env: qa
+    size: medium
