@@ -1,7 +1,8 @@
 ---
 # tasks file for create-namespace
 - name: Create Namespace 
-  kubernetes.core.k8s:
+  #kubernetes.core.k8s:
+  k8s:
     state: present
     definition: 
       api_version: v1
@@ -13,14 +14,16 @@
   with_items: '{{ namespaces }}'
 
 - name: Apply Limit Ranges 
-  kubernetes.core.k8s:
+  #kubernetes.core.k8s:
+  k8s:
     state: present 
     src: 'files/limitranges/{{ item.size }}.yaml'
     namespace: '{{ app }}-{{ item.env }}'
   with_items: '{{ namespaces }}'
 
 - name: Apply Resource Quotas 
-  kubernetes.core.k8s:
+  #kubernetes.core.k8s:
+  k8s:
     state: present 
     src: 'files/resourcequotas/{{ item.size }}.yaml'
     namespace: '{{ app }}-{{ item.env }}'
@@ -29,7 +32,8 @@
 - name: Apply Rolebindings 
   block: 
     - name: DEV Env Rolebindings 
-      kubernetes.core.k8s:
+      #kubernetes.core.k8s:
+      k8s:
         state: present 
         template: 'files/rolebindings/dev.yaml'
         namespace: '{{ app }}-{{ item.env }}'
@@ -37,7 +41,8 @@
       with_items: '{{ namespaces }}'
 
     - name: QA/UAT/PROD Env Rolebindings 
-      kubernetes.core.k8s:
+      #kubernetes.core.k8s:
+      k8s:
         state: present 
         template: 'files/rolebindings/qa-uat-prod.yaml'
         namespace: '{{ app }}-{{ item.env }}'
