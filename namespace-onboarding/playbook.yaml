@@ -4,7 +4,6 @@
   connection: local
   vars_files:
   - non-prod-vars.yaml
-
         
   tasks: 
     - name: Onboard Team Namespaces
@@ -15,6 +14,8 @@
 
     - name: Delete Team Namespaces
       kubernetes.core.k8s:
+        host: "{{ ocp_host }}"
+        api_key: "{{ auth_token }}"
         state: absent 
         definition: 
           api_version: v1
