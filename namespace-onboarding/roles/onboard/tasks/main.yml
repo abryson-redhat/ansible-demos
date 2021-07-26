@@ -2,8 +2,6 @@
 # tasks file for create-namespace
 - name: Create Namespace 
   kubernetes.core.k8s:
-    host: "{{ ocp_host }}"
-    api_key: "{{ auth_token }}"
     state: present
     definition: 
       api_version: v1
@@ -16,8 +14,6 @@
 
 - name: Apply Limit Ranges 
   kubernetes.core.k8s:
-    host: "{{ ocp_host }}"
-    api_key: "{{ auth_token }}"
     state: present 
     src: 'files/limitranges/{{ item.size }}.yaml'
     namespace: '{{ app }}-{{ item.env }}'
@@ -25,8 +21,6 @@
 
 - name: Apply Resource Quotas 
   kubernetes.core.k8s:
-    host: "{{ ocp_host }}"
-    api_key: "{{ auth_token }}"
     state: present 
     src: 'files/resourcequotas/{{ item.size }}.yaml'
     namespace: '{{ app }}-{{ item.env }}'
@@ -36,8 +30,6 @@
   block: 
     - name: DEV Env Rolebindings 
       kubernetes.core.k8s:
-        host: "{{ ocp_host }}"
-        api_key: "{{ auth_token }}"
         state: present 
         template: 'files/rolebindings/dev.yaml'
         namespace: '{{ app }}-{{ item.env }}'
@@ -46,8 +38,6 @@
 
     - name: QA/UAT/PROD Env Rolebindings 
       kubernetes.core.k8s:
-        host: "{{ ocp_host }}"
-        api_key: "{{ auth_token }}"
         state: present 
         template: 'files/rolebindings/qa-uat-prod.yaml'
         namespace: '{{ app }}-{{ item.env }}'
