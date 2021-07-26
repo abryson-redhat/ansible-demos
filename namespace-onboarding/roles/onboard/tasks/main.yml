@@ -17,7 +17,7 @@
   #kubernetes.core.k8s:
   k8s:
     state: present 
-    src: 'files/limitranges/{{ item.size }}.yaml'
+    src: 'namespace-onboarding/roles/onboard/files/limitranges/{{ item.size }}.yaml'
     namespace: '{{ app }}-{{ item.env }}'
   with_items: '{{ namespaces }}'
 
@@ -25,7 +25,7 @@
   #kubernetes.core.k8s:
   k8s:
     state: present 
-    src: 'files/resourcequotas/{{ item.size }}.yaml'
+    src: 'namespace-onboarding/roles/onboard/files/resourcequotas/{{ item.size }}.yaml'
     namespace: '{{ app }}-{{ item.env }}'
   with_items: '{{ namespaces }}'
 
@@ -35,7 +35,7 @@
       #kubernetes.core.k8s:
       k8s:
         state: present 
-        template: 'files/rolebindings/dev.yaml'
+        template: 'namespace-onboarding/roles/onboard/files/rolebindings/dev.yaml'
         namespace: '{{ app }}-{{ item.env }}'
       when: item.env == 'dev'
       with_items: '{{ namespaces }}'
@@ -44,7 +44,7 @@
       #kubernetes.core.k8s:
       k8s:
         state: present 
-        template: 'files/rolebindings/qa-uat-prod.yaml'
+        template: 'namespace-onboarding/roles/onboard/files/rolebindings/qa-uat-prod.yaml'
         namespace: '{{ app }}-{{ item.env }}'
       when: item.env != 'dev'
       with_items: '{{ namespaces }}'
