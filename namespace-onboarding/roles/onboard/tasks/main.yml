@@ -36,7 +36,7 @@
       k8s:
         state: present 
         #template: '{{ role_path }}/files/rolebindings/dev.yaml'
-        definition: "{{ lookup('file', '{{ role_path }}/files/rolebindings/dev.yaml' }}"
+        definition: "{{ lookup('file', '{{ role_path }}/files/rolebindings/dev.yaml') | from_yaml }}"
         namespace: '{{ app }}-{{ item.env }}'
       when: item.env == 'dev'
       with_items: '{{ namespaces }}'
@@ -46,7 +46,7 @@
       k8s:
         state: present 
         #template: '{{ role_path }}/files/rolebindings/qa-uat-prod.yaml'
-        definition: "{{ lookup('file', '{{ role_path }}/files/rolebindings/qa-uat-prod.yaml' }}"
+        definition: "{{ lookup('file', '{{ role_path }}/files/rolebindings/qa-uat-prod.yaml') | from_yaml }}"
         namespace: '{{ app }}-{{ item.env }}'
       when: item.env != 'dev'
       with_items: '{{ namespaces }}'
